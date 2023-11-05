@@ -315,15 +315,30 @@ public boolean CreateTableOfStudent(){
 
         return false;
     }
-    public void insertBookForStudent(int studentId, String bookName, Date issueDate, int expiryDays) {
+
+
+    public boolean CreateTableOfBookDetail(){
+        Connection connection = connectToDatabase();
+        boolean b = false;
+        try {
+            Statement st = connection.createStatement();
+            String createQuery = "CREATE TABLE IF NOT EXISTS issued_books (studentId INT, book_name VARCHAR(80), issue_date DATE, expiry_days INT)";
+
+            b = st.execute(createQuery);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return  b;
+    }
+    public void insertBookForStudent( int studentId ,String bookName, Date issueDate, int expiryDays) {
         Connection connection = connectToDatabase();
         // Define the SQL INSERT query.
-        String insertQuery = "INSERT INTO student (student_id, book_name, issue_date, expiry_days) VALUES (?, ?, ?, ?)";
+        String insertQuery = "INSERT INTO issued_books (studentId,book_name, issue_date, expiry_days) VALUES (?, ?, ?, ?)";
 
         try {
             // Create a PreparedStatement with the SQL query.
             PreparedStatement preparedStatement = connection.prepareStatement(insertQuery);
-            preparedStatement.setInt(1, studentId);
+            preparedStatement.setInt(1,studentId);
             preparedStatement.setString(2, bookName);
             preparedStatement.setDate(3, new java.sql.Date(issueDate.getTime())); // Convert Java Date to SQL Date
             preparedStatement.setInt(4, expiryDays);
@@ -342,4 +357,23 @@ public boolean CreateTableOfStudent(){
         }
     }
 
+
+
+    public List<String> getAllIssuedBookInfo(int id) {
+        Connection connection = connectToDatabase();
+        List<String> schoolDBList = new ArrayList<>();
+        Student sc = null;
+        Books bc = null;
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("select * from issued_books  where studentId = " + id);
+            while (resultSet.next()) {
+                String bookName = resultSet.getString("book_name");
+                schoolDBList.add(bookName);
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return schoolDBList;
+    }
 }

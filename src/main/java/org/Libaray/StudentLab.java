@@ -2,86 +2,76 @@ package org.Libaray;
 
 import
         java.sql.Date;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Scanner;
 
 public class StudentLab {
 
-    public static void bookSearch(String bookName, String authorName) {
+    public static void bookSearch(int bookId) {
         LabDatabase lab = new LabDatabase();
         for (Books book : lab.getAllBooks()) {
             {
-                if (bookName.equalsIgnoreCase(book.getBookName()) && authorName.equalsIgnoreCase(book.getAuthorName())) {
+                if (bookId == book.getBookId()) {
                     System.out.println(book);
                 }
             }
         }
     }
 
-    public static void returnBook(int studentId , String bookName, String authorName) {
-        Student s = new Student();
+    public static void returnBook(int studentId) {
         LabDatabase lab = new LabDatabase();
-        for (Books book : lab.getAllBooks()) {
-            {
-                if (studentId == s.getStudentId() && bookName.equalsIgnoreCase(book.getBookName()) && authorName.equalsIgnoreCase(book.getAuthorName())) {
-                    System.out.println(book);
-                }
-            }
+        for (String b : lab.getAllIssuedBookInfo(studentId)){
+            System.out.println(b);
         }
     }
-    public static void orderPlace(String bookName){
-        LabDatabase lab = new LabDatabase();
-        for (Books books : lab.getAllBooks()){
-            if (bookName.equalsIgnoreCase(books.getBookName())){
-                System.out.println(books);
-            }
-        }
-    }
-
-
 
     public static void searchBook(int id) {
-        Date g = new Date(04112023);
+        LocalDate g = LocalDate.now();
         Scanner sc = new Scanner(System.in);
+        int i = 0;
         LabDatabase lab = new LabDatabase();
+       List<Books> name = lab.getAllBooks();
+        for ( i = 0; i <name.size() ; i++) {
+            System.out.println("Book Name :" + (i+1) + " " + name.get(i).getBookName());
+
+        }
 
         for (Student student : lab.getAllStudentsData()) {
+            lab.CreateTableOfBookDetail();
             if (id == student.getStudentId()) {
                 System.out.println(student);
                 System.out.println("Enter book name");
                 String bookName = sc.nextLine();
-                System.out.println("Enter expire days");
-                int expiryDate = sc.nextInt();
+                int expiryDate = 3;
 
                 // Insert the book information into the database
-                lab.insertBookForStudent(id, bookName, g, expiryDate);
+                lab.insertBookForStudent( id,bookName, Date.valueOf(g), expiryDate);
 
                 System.out.println();
-                System.out.println("Your issued book is: " + bookName + "\t\tIssue Date: " + g.getDate() + "/" + g.getMonth() + "/" + (g.getYear() - 100));
+                System.out.println("Your issued book is: " + bookName + "\t\tIssue Date: " + g.getDayOfMonth()+ "/" + g.getMonth() + "/" + g.getYear());
                 System.out.print("Expiry date of this book: ");
-                System.out.println(expiryDate + g.getDate() + "/" + g.getMonth() + "/" + (g.getYear() - 100));
+                System.out.println(expiryDate + g.getDayOfMonth() + "/" + g.getMonth() + "/" + g.getYear());
             }
+        }
+        System.out.println("Do you want to add more book press Y , not press N");
+        String choice = sc.next();
+        if (choice.equalsIgnoreCase("Y")){
+            searchBook(id);
         }
     }
 
     public static void startStudent () {
             Scanner sc = new Scanner(System.in);
 
-            System.out.println("1 : Search Books" + "\t\t2 : View Book Issue Date" + "\t\t3 : Return Book" + "\t\t4 : Place Order" + "\t\t5 : Logout");
+            System.out.println("1 : Search Books" + "\t\t2 : View Issue Books & Date" + "\t\t3 : Return Book" + "\t\t4 : Logout");
             int input = sc.nextInt();
             switch (input) {
                 case 1:
-                    LabDatabase labDatabase1 = new LabDatabase();
-                    List<Books> sca1 = labDatabase1.getAllBooks();
-                    for (Books schoolDB : sca1) {
-                        System.out.println(schoolDB);
-                    }
                     sc.nextLine();
-                    System.out.println("Enter book name");
-                    String bookN = sc.nextLine();
-                    System.out.println("Enter author name");
-                    String authorN = sc.nextLine();
-                    bookSearch(bookN, authorN);
+                    System.out.println("Enter book Id");
+                    int bookId = sc.nextInt();
+                    bookSearch(bookId);
                     startStudent();
                     break;
 
@@ -89,10 +79,10 @@ public class StudentLab {
                     System.out.println("Enter student Id for search");
                     int num = sc.nextInt();
                     searchBook(num);
+                    startStudent();
                     break;
 
-
-                case 3:
+                    case 3:
                     LabDatabase labDatabase3 = new LabDatabase();
                     List<Books> sca3 = labDatabase3.getAllBooks();
                     for (Books schoolDB : sca3) {
@@ -100,27 +90,17 @@ public class StudentLab {
                     }
                     System.out.println("Enter Student Id");
                     int studentId = sc.nextInt();
-                    sc.nextLine();
-                    System.out.println("Enter book name");
-                    String bookName1 = sc.nextLine();
-                    System.out.println("Enter author name");
-                    String authorName1 = sc.nextLine();
-                    System.out.print("Your returned book is: ");
-                    returnBook(studentId, bookName1, authorName1);
+                    System.out.println("Your returned book is : ");
+                    returnBook(studentId);
+                    startStudent();
                     break;
 
                 case 4:
-                    LabDatabase labDatabase4 = new LabDatabase();
-                    List<Books> sca4 = labDatabase4.getAllBooks();
-                    for (Books schoolDB : sca4) {
-                        System.out.println(schoolDB);
-                    }
-                    sc.nextLine();
-                    System.out.println("Enter book name");
-                    String bookName = sc.nextLine();
-                    System.out.print("Your book ordered: ");
-                    orderPlace(bookName);
+                    System.out.println("You are logout");
                     break;
+
+                default:
+                    System.out.println("Invalid Choice");
             }
         }
     }

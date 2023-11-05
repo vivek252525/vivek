@@ -45,7 +45,7 @@ public class Libaray {
                 String a = sc.nextLine();
                 if (a.equalsIgnoreCase("n")) {
                     la.CreateTableOfStudent();
-                    System.out.println("Enter your your Id");
+                    System.out.println("Enter your Student Id");
                     int id = sc.nextInt();
                     sc.nextLine();
                     System.out.println("Enter your user name");

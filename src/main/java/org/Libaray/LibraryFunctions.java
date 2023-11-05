@@ -59,21 +59,24 @@ public class LibraryFunctions {
     public static void  start() {
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("1 : Add Books" + "\t\t2 : Search Books" + "\t\t3 : Update Book" + "\t\t5 : Show books" + "\t\t6 : Logout");
+        System.out.println("1 : Add Books" + "\t\t2 : Search Books" + "\t\t3 : Update Book" + "\t\t4 : Show books" + "\t\t5 : Logout");
         int input = sc.nextInt();
         switch (input) {
             case 1:
                 addBooks();
+                start();
                 break;
             case 2:
                 System.out.println("Enter book Id for search");
                 int num = sc.nextInt();
                 searchBook(num);
+                start();
                 break;
             case 3:
                 updateBook();
+                start();
                 break;
-            case 5:
+            case 4:
                 LabDatabase labDatabase1 = new LabDatabase();
                 List<Books> sca1 = labDatabase1.getAllBooks();
                 for (Books schoolDB : sca1) {
@@ -81,8 +84,11 @@ public class LibraryFunctions {
                 }
                 start();
                 break;
-            case 6:
-                start();
+            case 5:
+                System.out.println("You are Logout");
+                break;
+            default:
+                System.out.println("Invalid Choice");
         }
     }
 }

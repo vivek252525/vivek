@@ -1,6 +1,7 @@
 package org.Libaray;
 
 import java.util.Calendar;
+import java.util.Date;
 
 public class Student {
 
@@ -9,9 +10,15 @@ public class Student {
     private String password;
     private String issueBook;
 
+    private Date issueDate;
+
+    private int expiryDays;
+
+
     public Student() {
 
     }
+
 
     public Student( String issueBook) {
 
@@ -70,6 +77,24 @@ public class Student {
     public void setIssueBook(String issueBook) {
         this.issueBook = issueBook;
     }
+
+    public Date getIssueDate() {
+        return issueDate;
+    }
+
+    public void setIssueDate(Date issueDate) {
+        this.issueDate = issueDate;
+    }
+
+    public int getExpiryDays() {
+        return expiryDays;
+    }
+
+    public void setExpiryDays(int expiryDays) {
+        this.expiryDays = expiryDays;
+    }
+
+
 
     @Override
     public String toString() {
